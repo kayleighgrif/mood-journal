@@ -1,0 +1,190 @@
+#thesecondversion
+
+/* Base styles */
+:root {
+    --primary-color: #6d28d9;
+    --primary-light: #ddd6fe;
+    --primary-dark: #4c1d95;
+    --secondary-color: #e5e7eb;
+    --dark-bg: #1f2937;
+    --dark-card: #374151;
+    --dark-text: #e5e7eb;
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+/* Header styles */
+.app-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.dark-mode .app-title {
+    color: var(--primary-light);
+}
+
+.dark-mode-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+/* Card styles */
+.main-card {
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed);
+}
+
+.dark-mode .main-card {
+    background-color: var(--dark-card);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.result-card {
+    border-left: 4px solid var(--primary-color);
+    border-radius: 0.5rem;
+    transition: all var(--transition-speed);
+}
+
+.dark-mode .result-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 4px solid var(--primary-light);
+}
+
+/* Form element styles */
+textarea.form-control {
+    border: 1px solid #e2e8f0;
+    transition: all var(--transition-speed);
+}
+
+.dark-mode textarea.form-control,
+.dark-mode .form-control {
+    background-color: #4b5563;
+    border-color: #6b7280;
+    color: var(--dark-text);
+}
+
+.dark-mode textarea.form-control:focus,
+.dark-mode .form-control:focus {
+    background-color: #374151;
+    box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25);
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: all var(--transition-speed);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.dark-mode .btn-outline-primary {
+    color: var(--primary-light);
+    border-color: var(--primary-light);
+}
+
+.dark-mode .btn-outline-primary:hover {
+    background-color: var(--primary-dark);
+    color: white;
+}
+
+.dark-mode .btn-outline-secondary {
+    color: #9ca3af;
+    border-color: #6b7280;
+}
+
+.dark-mode .btn-check:checked + .btn-outline-primary {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-light);
+    color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#resultContainer, #errorContainer {
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Loading indicator */
+#loadingIndicator p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+.dark-mode #loadingIndicator p {
+    color: var(--primary-light);
+}
+
+.spinner-border {
+    height: 3rem;
+    width: 3rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+    }
+    
+    .btn-group > .btn {
+        border-radius: 0.25rem !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    .dark-mode-toggle {
+        position: static;
+        margin-top: 1rem;
+    }
+}
+
+/* Character count */
+.character-count {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Share buttons */
+.share-buttons .btn {
+    margin-left: 0.5rem;
+}
+
+/* Copy button animation */
+@keyframes flash {
+    0% { background-color: var(--primary-color); color: white; }
+    100% { background-color: transparent; }
+}
+
+#copyBtn.copied {
+    animation: flash 2s;
+}
