@@ -31,6 +31,7 @@
             border-radius: 10px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
             margin: 5px; 
+            margin-top: 10px;
         }
         button:hover {
             background-color: #d99baa;
@@ -78,7 +79,7 @@
             width: 15px;
             height: 15px;
             border-radius: 50%;
-            background: #EFB6C8;
+            background: #c0154b;
             cursor: pointer;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
         }
@@ -96,7 +97,7 @@
     
     <div class="mood-slider-continer">
         <input type="range" min="1" max="5" value="3" class="mood-slider" id="moodRange">
-        <div id="mood-label">Mood: 3</div>
+        <div id="mood-label">Slide to record your mood: Ok</div>
     </div>
     
     <button onclick="saveEntry()"> Save Entry </button>
@@ -104,25 +105,44 @@
     <h2>Past Entries </h2>
     <div id="entries"></div>
 
+    <button onclick="showMoodSummary()">Show Mood Summary</button>
+    <div id="moodSummary"></div>
+
     <script>
         const moodSlider = document.getElementById('moodRange');
         const moodLabel = document.getElementById('mood-label');
 
+        const moodLabels = {
+            1: "Awful",
+            2: "Bad",
+            3: "Okay",
+            4: "Good",
+            5: "Great"
+        };
+
+
         moodSlider.oninput = function() {
-            moodLabel.textContent = "Mood: " + this.value;
+            const moodValue = parseInt(this.value);
+            moodLabel.textContent = "Slide to record your mood: "+ moodLabels[moodValue];
         }
 
         function saveEntry() {
             let title = document.getElementById('diaryTitle').value;
             let entry = document.getElementById('diaryEntry').value;
+            let moodValue = parseInt(document.getElementById('moodRange').value);
+            let moodText = moodLabels[moodValue];
+
             if (title.trim() === "" || entry.trim() === "") return;
             
             let entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
             let date = new Date().toLocaleString();
-            entries.unshift({ title: title, text: entry, date: date });
+
+            entries.unshift({ title: title, text: entry, date: date, mood: moodText });
             localStorage.setItem('diaryEntries', JSON.stringify(entries));
             document.getElementById('diaryTitle').value = "";
             document.getElementById('diaryEntry').value = "";
+            moodSlider.value = 3;
+            moodLabel.textContent = "Slide to record your mood: Ok"
             displayEntries();
         }
 
@@ -132,7 +152,7 @@
             entryDiv.innerHTML = "";
             entries.forEach(entry => {
                 let entryElement = document.createElement('div');
-                entryElement.innerHTML = `<strong>${entry.title} - ${entry.date}</strong><p>${entry.text}</p><hr>`;
+                entryElement.innerHTML = `<strong>${entry.title} - ${entry.date} - Mood: ${entry.mood}</strong><p>${entry.text}</p><hr>`;
                 entryDiv.appendChild(entryElement);
             });
         }
@@ -143,7 +163,55 @@
 
         }
 
-        window.onload = displayEntries;
+        function summarizeMoodsForMonth(year,month){
+            let entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+            const moodCounts = {};
+
+            entries.forEach(entry => {
+                const entryDate = new Date(entry.date);
+                if (entryDate.getFullYear() === year && entryDate.getMonth() === month) {
+                    const mood = entry.mood;
+                    moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+                }
+            });
+            return moodCounts;
+        }
+        
+
+        function displayMoodSummary(year,month){
+            const moodSummary = summarizeMoodsForMonth(year, month);
+            const summaryDiv = document.getElementById('moodSummary'); // Create a div with this ID in your HTML
+            summaryDiv.innerHTML = ""; // Clear previous summary
+
+            if (Object.keys(moodSummary).length === 0) {
+            summaryDiv.innerHTML = "<p>No entries for this month.</p>";
+            return;
+            }
+
+            let summaryText = "<h3>Mood Summary for " + getMonthName(month) + " " + year + "</h3><ul>";
+            for (const mood in moodSummary) {
+                summaryText += `<li>${mood}: ${moodSummary[mood]} entries</li>`;
+                }
+            summaryText += "</ul>";
+            summaryDiv.innerHTML = summaryText;
+            }
+
+        function getMonthName(month) { // Correct placement - top-level function
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            return monthNames[month];
+        }
+
+
+        function showMoodSummary() {
+            const currentDate = new Date();
+            displayMoodSummary(currentDate.getFullYear(), currentDate.getMonth());
+        }
+
+        window.onload = function(){
+            displayEntries();
+        }
     </script>
 </body>
 </html>
