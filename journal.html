@@ -180,8 +180,8 @@
 
         function displayMoodSummary(year,month){
             const moodSummary = summarizeMoodsForMonth(year, month);
-            const summaryDiv = document.getElementById('moodSummary'); // Create a div with this ID in your HTML
-            summaryDiv.innerHTML = ""; // Clear previous summary
+            const summaryDiv = document.getElementById('moodSummary'); 
+            summaryDiv.innerHTML = ""; 
 
             if (Object.keys(moodSummary).length === 0) {
             summaryDiv.innerHTML = "<p>No entries for this month.</p>";
@@ -196,7 +196,7 @@
             summaryDiv.innerHTML = summaryText;
             }
 
-        function getMonthName(month) { // Correct placement - top-level function
+        function getMonthName(month) { 
             const monthNames = ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"
             ];
