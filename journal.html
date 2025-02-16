@@ -6,46 +6,47 @@
     <title>Your Journal</title>
     <style>
         body {
-            font-family: 'Times New Roman', cursive, sans-serif;
+            font-family: Helvetica;
             text-align: center;
-            margin: 20px;
+            margin: 28px;
             background-color: #ffe4e1;
-            color: #d27bd7;
+            color: #EFB6C8;
         }
         textarea {
             width: 80%;
             height: 200px;
             margin-bottom: 10px;
-            border: 2px solid #d27bd7;
+            border: 2px solid #EFB6C8;
             border-radius: 10px;
             padding: 10px;
-            background-color: #fff0f5;
+            background-color: white;
         }
         button {
             padding: 10px 20px;
             cursor: pointer;
             border: none;
-            background-color: #d27bd7;
+            background-color: #EFB6C8;
             color: white;
             font-size: 16px;
             border-radius: 10px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            margin: 5px; 
         }
         button:hover {
-            background-color: #d27bd7;
+            background-color: #d99baa;
         }
         #entries {
             margin-top: 20px;
             text-align: left;
             width: 80%;
             margin: auto;
-            background-color: #efd9f7;
+            background-color: white;
             padding: 10px;
             border-radius: 10px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
         }
         h1, h2 {
-            font-family: 'Pacifico', cursive;
+            font-family: Helvetica;
             font-size: 25px;
             padding: 20px;
         }
@@ -54,19 +55,63 @@
             padding: 8px;
             margin-bottom: 10px;
             border-radius: 10px;
-            border: 2px solid #d27bd7;
+            border: 2px solid #EFB6C8;
         }
+
+       
+        .mood-slider {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 5px;
+            background: #EFB6C8;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+            border-radius: 5px;
+        }
+
+        .mood-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #EFB6C8;
+            cursor: pointer;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        #mood-label {
+            margin-top: 5px;
+        }
+
     </style>
 </head>
 <body>
-    <h1> My Cute Diary </h1>
+    <h1> Daily Journal </h1>
     <input id="diaryTitle" type="text" placeholder="Entry Title..." font="Times New Roman"><br>
     <textarea id="diaryEntry" placeholder="Write your diary entry..."></textarea><br>
+    
+    <div class="mood-slider-continer">
+        <input type="range" min="1" max="5" value="3" class="mood-slider" id="moodRange">
+        <div id="mood-label">Mood: 3</div>
+    </div>
+    
     <button onclick="saveEntry()"> Save Entry </button>
+    <button onclick="clearEntries()">Clear Entries</button>
     <h2>Past Entries </h2>
     <div id="entries"></div>
 
     <script>
+        const moodSlider = document.getElementById('moodRange');
+        const moodLabel = document.getElementById('mood-label');
+
+        moodSlider.oninput = function() {
+            moodLabel.textContent = "Mood: " + this.value;
+        }
+
         function saveEntry() {
             let title = document.getElementById('diaryTitle').value;
             let entry = document.getElementById('diaryEntry').value;
@@ -93,7 +138,9 @@
         }
 
         function clearEntries(){
-            //TODO: Create a function to clear past entries
+            localStorage.removeItem('diaryEntries');
+            document.getElementById('entries').innerHTML = ""; 
+
         }
 
         window.onload = displayEntries;
